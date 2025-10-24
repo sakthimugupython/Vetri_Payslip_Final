@@ -1,0 +1,6 @@
+Django
+reportlab
+gunicorn
+whitenoise
+psycopg2-binary
+python-decouple

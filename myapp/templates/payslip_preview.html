@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Payslip - VETRI IT SYSTEMS</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/logo.css' %}">
+    <style>
+        body {
+            background-color: #e8f5e9;
+            font-family: Arial, sans-serif;
+        }
+
+        .payslip-preview-container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            padding-top: 10px; /* Added for fixed navbar */
+        }
+        
+        .page-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .btn-print {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-print::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-print:hover::before {
+            left: 100%;
+        }
+
+        .btn-print:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .btn-print:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-download::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-download:hover::before {
+            left: 100%;
+        }
+
+        .btn-download:hover {
+            background: linear-gradient(135deg, #e0a800, #d39e00);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        .btn-download:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+        }
+        
+        .payslip-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .employee-statement-box {
+            background-color: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            margin: 0 0 0 30px;
+        }
+        
+        .statement-title {
+            color: #5b4d9e;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-decoration: underline;
+        }
+        
+        .company-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .company-info-section {
+            flex: 0 0 250px; /* Fixed width instead of flex: 1 */
+        }
+        
+        .employee-statement-section {
+            width: 400px; /* Increased from 300px */
+            margin-left: 20px;
+            flex-shrink: 0;
+        }
+        
+        .detail-row {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #000;
+            min-width: 130px;
+            display: inline-block;
+            width: 130px;
+        }
+        
+        .detail-value {
+            color: black;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .earnings-deductions-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .table-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 12px;
+        }
+        
+        .table-header {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 10px 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .table-body {
+            padding: 12px;
+            background-color: #fff;
+        }
+        
+        .table-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 12px;
+        }
+        
+        .table-footer {
+            background-color: #5b4d9e;
+            color: white;
+            padding: 10px 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        
+        .net-payable-box {
+            background-color: #f2fae9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .net-payable-left h5 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: #000;
+        }
+        
+        .net-payable-left p {
+            font-size: 11px;
+            color: #666;
+            margin: 0;
+        }
+        
+        .net-payable-amount {
+            background-color: #5b4d9e;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .amount-in-words {
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .action-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn-print {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-print::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-print:hover::before {
+            left: 100%;
+        }
+
+        .btn-print:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .btn-print:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-download::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-download:hover::before {
+            left: 100%;
+        }
+
+        .btn-download:hover {
+            background: linear-gradient(135deg, #e0a800, #d39e00);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        .btn-download:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-save::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-save:hover::before {
+            left: 100%;
+        }
+
+        .btn-save:hover {
+            background: linear-gradient(135deg, #218838, #17a2b8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-save:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+        }
+        
+        .signatures-section {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #ccc;
+        }
+        
+        .signature-title {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5b4d9e;
+            margin-bottom: 35px;
+        }
+        
+        .signature-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .signature-box {
+            width: 45%;
+            text-align: center;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #000;
+            padding-top: 8px;
+            margin-top: 25px;
+        }
+        
+        .signature-name {
+            font-weight: 600;
+            color: #000;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+        
+        .signature-role {
+            color: #5b4d9e;
+            font-size: 10px;
+        }
+        
+        @media (max-width: 767px) {
+            .payslip-preview-container {
+                max-width: 100%;
+                margin: 15px;
+                padding: 10px;
+                padding-top: 10px; /* Adjusted for mobile */
+            }
+
+            .page-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+        @media (max-width: 767px) {
+            .payslip-preview-container {
+                max-width: 100%;
+                margin: 15px;
+                padding: 10px;
+                padding-top: 10px; /* Adjusted for mobile */
+            }
+
+            .page-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .btn-print, .btn-download, .btn-save {
+                padding: 8px 20px;
+                font-size: 12px;
+                margin: 5px;
+            }
+
+            .btn-save {
+                padding: 8px 20px;
+                font-size: 12px;
+            }
+
+            .company-row {
+                flex-direction: column;
+            }
+
+            .company-info-section {
+                flex: none;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .employee-statement-section {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .detail-label {
+                width: 120px;
+                font-size: 11px;
+            }
+
+            .detail-value {
+                font-size: 11px;
+            }
+
+            .earnings-deductions-container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .table-section {
+                font-size: 11px;
+            }
+
+            .table-header {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+
+            .table-body {
+                padding: 10px;
+            }
+
+            .table-row {
+                font-size: 11px;
+                padding: 5px 0;
+            }
+
+            .net-payable-box {
+                flex-direction: column;
+                text-align: center;
+                padding: 12px;
+            }
+
+            .net-payable-left {
+                margin-bottom: 10px;
+            }
+
+            .net-payable-amount {
+                font-size: 16px;
+                padding: 8px 20px;
+            }
+
+            .amount-in-words {
+                font-size: 10px;
+                padding: 8px;
+            }
+
+            .signatures-section {
+                margin-top: 30px;
+            }
+
+            .signature-row {
+                flex-direction: column;
+                padding: 0 10px;
+            }
+
+            .signature-box {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payslip-preview-container {
+                margin: 10px;
+                padding: 5px;
+                padding-top: 10px; /* Adjusted for small mobile */
+            }
+
+            .payslip-card {
+                padding: 20px;
+            }
+
+            .company-logo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .company-title {
+                font-size: 14px;
+            }
+
+            .company-address {
+                font-size: 10px;
+            }
+
+            .statement-title {
+                font-size: 12px;
+            }
+
+            .detail-label {
+                width: 100px;
+                font-size: 10px;
+            }
+
+            .detail-value {
+                font-size: 10px;
+            }
+
+            .btn-print, .btn-download, .btn-save {
+                padding: 5px 15px;
+                font-size: 11px;
+            }
+            .employee-statement-box {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            @media print {
+                * {
+                    -webkit-print-color-adjust: exact !important;
+                    color-adjust: exact !important;
+                }
+
+                html, body {
+                    background: white !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    height: auto !important;
+                    overflow: visible !important;
+                }
+
+                /* Hide all navigation and buttons */
+                header, .header, nav, .navbar, .action-buttons, .btn-print, .btn-download, .page-title {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    overflow: hidden !important;
+                }
+
+                /* Show only payslip content */
+                .payslip-preview-container, .payslip-card {
+                    display: block !important;
+                    visibility: visible !important;
+                    margin: 0 !important;
+                    padding: 8px !important;
+                    box-shadow: none !important;
+                    border: none !important;
+                    background: white !important;
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    min-height: auto !important;
+                    font-size: 10px !important;
+                }
+
+                .payslip-card {
+                    padding: 10px !important;
+                    margin: 0 !important;
+                }
+
+                /* Make content more compact for single page */
+                .company-row {
+                    margin-bottom: 5px !important;
+                }
+
+                .company-header {
+                    margin-bottom: 8px !important;
+                }
+
+                .company-logo {
+                    width: 40px !important;
+                    height: 40px !important;
+                }
+
+                .company-title {
+                    font-size: 12px !important;
+                    margin-bottom: 2px !important;
+                }
+
+                .company-address {
+                    font-size: 8px !important;
+                    line-height: 1.2 !important;
+                }
+
+                .employee-statement-section {
+                    margin-left: 10px !important;
+                    width: 350px !important;
+                }
+
+                .statement-title {
+                    font-size: 10px !important;
+                    margin-bottom: 5px !important;
+                }
+
+                .detail-label {
+                    width: 90px !important;
+                    font-size: 8px !important;
+                }
+
+                .detail-value {
+                    font-size: 8px !important;
+                }
+
+                .detail-row {
+                    margin-bottom: 2px !important;
+                }
+
+                .earnings-deductions-container {
+                    margin: 5px 0 !important;
+                    gap: 8px !important;
+                }
+
+                .table-section {
+                    font-size: 8px !important;
+                    border: 0.5px solid #ccc !important;
+                }
+
+                .table-header {
+                    padding: 4px 6px !important;
+                    font-size: 8px !important;
+                }
+
+                .table-body {
+                    padding: 6px !important;
+                }
+
+                .table-row {
+                    padding: 2px 0 !important;
+                    font-size: 8px !important;
+                }
+
+                .table-footer {
+                    padding: 4px 6px !important;
+                    font-size: 8px !important;
+                    background-color: #5b4d9e !important;
+                    color: white !important;
+                }
+
+                .net-payable-box {
+                    margin: 5px 0 !important;
+                    padding: 8px !important;
+                }
+
+                .net-payable-left h5 {
+                    font-size: 10px !important;
+                    margin-bottom: 2px !important;
+                }
+
+                .net-payable-left p {
+                    font-size: 7px !important;
+                }
+
+                .net-payable-amount {
+                    font-size: 12px !important;
+                    padding: 5px 15px !important;
+                }
+
+                .amount-in-words {
+                    margin: 5px 0 !important;
+                    padding: 5px !important;
+                    font-size: 8px !important;
+                }
+
+                .signatures-section {
+                    margin-top: 10px !important;
+                }
+
+                .signature-title {
+                    font-size: 9px !important;
+                    margin-bottom: 15px !important;
+                }
+
+                .signature-row {
+                    padding: 0 5px !important;
+                }
+
+                .signature-name {
+                    font-size: 9px !important;
+                }
+
+                .signature-role {
+                    font-size: 7px !important;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+            <div class="container-fluid">
+                <!-- Logo and Company Name -->
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
+                    <img src="{% static 'images/VIS LOGO.png' %}" alt="Logo" class="logo-img">
+                    <div class="ms-3">
+                        <h1 class="company-name mb-0">VETRI IT SYSTEMS</h1>
+                        <p class="company-subtitle mb-0">-Employee Payslip-</p>
+                    </div>
+                </a>
+                
+                <!-- Hamburger Toggle Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Collapsible Menu -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <div class="navbar-nav">
+                        <a href="{% url 'dashboard' %}" class="nav-link btn-generate me-2">Generate Payslip</a>
+                        <a href="{% url 'view_payslips' %}" class="nav-link btn-view-payslip me-2">View Payslip</a>
+                        <a href="{% url 'logout' %}" class="nav-link btn-logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="payslip-preview-container">
+        <h2 class="page-title">EMPLOYEE PAYSLIP</h2>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn-print" onclick="printPayslip()">
+                Print
+            </button>
+            <button class="btn-download" onclick="downloadPDF()">
+                Download PDF
+            </button>
+            <button class="btn-save" onclick="saveToRecords()">
+                Save to Records
+            </button>
+        </div>
+        
+        <!-- Payslip Card -->
+        <div class="payslip-card" id="payslip-content">
+            <!-- Company and Employee Info Row -->
+            <div class="company-row">
+                <div class="company-info-section">
+                    <div class="company-header">
+                        <img src="{% static 'images/VIS LOGO.png' %}" alt="Company Logo" class="company-logo">
+                        <div class="company-info">
+                            <h3 class="company-title mt-2 fs-6">VETRI IT SYSTEMS PVT LTD.,</h3>
+                            <p class="company-address fw-light">
+                                Shanthi complex, Second floor,<br>
+                                Surandai, Tenkasi - 627 859<br>
+                                India
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="employee-statement-section">
+                    <div class="employee-statement-box">
+                        <div class="statement-title">Employee Statement</div>
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="detail-label">Employee Name</span>
+                                <span class="detail-value">: {{ payslip_data.employee_name }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Pay Period</span>
+                                <span class="detail-value">: <span id="shortPayPeriod">{{ payslip_data.pay_period }}</span></span>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="detail-label">Employee ID</span>
+                                <span class="detail-value">: {{ payslip_data.employee_id }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Paid Days</span>
+                                <span class="detail-value">: {{ payslip_data.paid_days }}</span>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="detail-label">Loss of Pay Days</span>
+                                <span class="detail-value">: {{ payslip_data.loss_of_pay_days }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Payment Date</span>
+                                <span class="detail-value">: {{ payslip_data.payment_date }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Earnings and Deductions -->
+            <div class="earnings-deductions-container">
+                <!-- Earnings -->
+                <div class="table-section">
+                    <div class="table-header">
+                        <span>Earnings</span>
+                        <span>Amount</span>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-row">
+                            <span>Basic</span>
+                            <span>₹ {{ payslip_data.basic_salary }}</span>
+                        </div>
+                        <div class="table-row">
+                            <span>Incentive</span>
+                            <span>₹ {{ payslip_data.incentive }}</span>
+                        </div>
+                    </div>
+                    <div class="table-footer">
+                        <span>Gross Earnings</span>
+                        <span>₹ {{ payslip_data.gross_earnings }}</span>
+                    </div>
+                </div>
+                
+                <!-- Deductions -->
+                <div class="table-section">
+                    <div class="table-header">
+                        <span>Deduction</span>
+                        <span>Amount</span>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-row">
+                            <span>Income Tax</span>
+                            <span>₹ {{ payslip_data.income_tax }}</span>
+                        </div>
+                        <div class="table-row">
+                            <span>&nbsp;</span>
+                            <span>&nbsp;</span>
+                        </div>
+                    </div>
+                    <div class="table-footer">
+                        <span>Total Deduction</span>
+                        <span>₹ {{ payslip_data.total_deduction }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total Net Payable -->
+            <div class="net-payable-box">
+                <div class="net-payable-left">
+                    <h5>TOTAL NET PAYABLE</h5>
+                    <p>Gross Earnings - Total Deduction</p>
+                </div>
+                <div class="net-payable-amount">₹ {{ payslip_data.net_payable }}</div>
+            </div>
+            
+            <!-- Amount in Words -->
+            <div class="amount-in-words">
+                <strong>Amount in words:</strong> {{ payslip_data.amount_in_words }}
+            </div>
+            
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="signature-title">ACKNOWLEDGED BY,</div>
+                <div class="signature-row">
+                    <div class="signature-box">
+                        <div class="signature-line">
+                            <div class="signature-name">{{ payslip_data.employee_name }}</div>
+                            <div class="signature-role">Employee, VETRI IT SYSTEMS PVT LTD.,</div>
+                        </div>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line">
+                            <div class="signature-name">AUTHORISED NAME</div>
+                            <div class="signature-role">Managing Director, VETRI IT SYSTEMS PVT LTD.,</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function printPayslip() {
+            // Store original styles before hiding
+            const elementsToHide = [
+                'header', '.header', 'nav', '.navbar',
+                '.action-buttons', '.page-title'
+            ];
+
+            const originalStyles = new Map();
+
+            // Hide elements and store original styles
+            elementsToHide.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    originalStyles.set(el, {
+                        display: el.style.display,
+                        visibility: el.style.visibility,
+                        height: el.style.height,
+                        margin: el.style.margin,
+                        padding: el.style.padding,
+                        overflow: el.style.overflow
+                    });
+
+                    el.style.display = 'none';
+                    el.style.visibility = 'hidden';
+                    el.style.height = '0';
+                    el.style.margin = '0';
+                    el.style.padding = '0';
+                    el.style.overflow = 'hidden';
+                });
+            });
+
+            // Temporarily modify body background
+            const bodyOriginalBg = document.body.style.backgroundColor;
+            const bodyOriginalMargin = document.body.style.margin;
+            const bodyOriginalPadding = document.body.style.padding;
+
+            document.body.style.backgroundColor = 'white';
+            document.body.style.margin = '0';
+            document.body.style.padding = '0';
+
+            // Print only the payslip content
+            window.print();
+
+            // Restore all styles immediately after print dialog opens
+            // Use a shorter timeout to ensure restoration happens quickly
+            setTimeout(() => {
+                // Restore all hidden elements
+                elementsToHide.forEach(selector => {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(el => {
+                        const original = originalStyles.get(el);
+                        if (original) {
+                            el.style.display = original.display;
+                            el.style.visibility = original.visibility;
+                            el.style.height = original.height;
+                            el.style.margin = original.margin;
+                            el.style.padding = original.padding;
+                            el.style.overflow = original.overflow;
+                        }
+                    });
+                });
+
+                // Restore body styles
+                document.body.style.backgroundColor = bodyOriginalBg;
+                document.body.style.margin = bodyOriginalMargin;
+                document.body.style.padding = bodyOriginalPadding;
+
+                // Clear the map to free memory
+                originalStyles.clear();
+            }, 50);
+        }
+
+        function saveToRecords() {
+            // Get CSRF token
+            const csrftoken = getCookie('csrftoken');
+
+            // Show loading state
+            const saveBtn = document.querySelector('.btn-save');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = 'Saving...';
+            saveBtn.disabled = true;
+
+            // Make request to save payslip to database
+            fetch('{% url "save_payslip_to_database" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    employee_name: '{{ payslip_data.employee_name }}',
+                    employee_id: '{{ payslip_data.employee_id }}',
+                    pay_period: '{{ payslip_data.pay_period }}',
+                    paid_days: {{ payslip_data.paid_days }},
+                    loss_of_pay_days: {{ payslip_data.loss_of_pay_days }},
+                    payment_date: '{{ payslip_data.payment_date }}',
+                    basic_salary: '{{ payslip_data.basic_salary }}',
+                    incentive: '{{ payslip_data.incentive }}',
+                    gross_earnings: '{{ payslip_data.gross_earnings }}',
+                    income_tax: '{{ payslip_data.income_tax }}',
+                    total_deduction: '{{ payslip_data.total_deduction }}',
+                    net_payable: '{{ payslip_data.net_payable }}',
+                    amount_in_words: '{{ payslip_data.amount_in_words }}'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Payslip saved to records successfully!');
+                    // Redirect to view payslips page
+                    window.location.href = '{% url "view_payslips" %}';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error saving payslip. Please try again.');
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            });
+        }
+        
+        function downloadPDF() {
+            // Get CSRF token
+            const csrftoken = getCookie('csrftoken');
+            
+            // Show loading state
+            const downloadBtn = document.querySelector('.btn-download');
+            const originalText = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = 'Generating PDF...';
+            downloadBtn.disabled = true;
+            
+            // Make request to generate and download PDF
+            fetch('{% url "generate_pdf_download" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    employee_name: '{{ payslip_data.employee_name }}',
+                    employee_id: '{{ payslip_data.employee_id }}',
+                    pay_period: '{{ payslip_data.pay_period }}',
+                    paid_days: {{ payslip_data.paid_days }},
+                    loss_of_pay_days: {{ payslip_data.loss_of_pay_days }},
+                    payment_date: '{{ payslip_data.payment_date }}',
+                    basic_salary: '{{ payslip_data.basic_salary }}',
+                    incentive: '{{ payslip_data.incentive }}',
+                    gross_earnings: '{{ payslip_data.gross_earnings }}',
+                    income_tax: '{{ payslip_data.income_tax }}',
+                    total_deduction: '{{ payslip_data.total_deduction }}',
+                    net_payable: '{{ payslip_data.net_payable }}',
+                    amount_in_words: '{{ payslip_data.amount_in_words }}'
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create blob URL and trigger download
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `payslip_{{ payslip_data.employee_id }}_{{ payslip_data.pay_period|slugify }}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+                
+                alert('Payslip downloaded successfully!');
+            })
+            .catch(error => {
+                alert('Error downloading payslip. Please try again.');
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                downloadBtn.innerHTML = originalText;
+                downloadBtn.disabled = false;
+            });
+        }
+        
+        // Helper function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Convert pay period format (no conversion needed for 1-Oct-2025 to 30-Oct-2025 format)
+        document.addEventListener('DOMContentLoaded', function() {
+            const payPeriodElement = document.getElementById('shortPayPeriod');
+            if (payPeriodElement) {
+                const currentFormat = payPeriodElement.textContent.trim();
+                
+                // The format is already correct: "1-Oct-2025 to 30-Oct-2025"
+                // No conversion needed, but we can ensure it's properly formatted
+                if (currentFormat.includes(' to ')) {
+                    // Format is already correct, just ensure proper capitalization if needed
+                    payPeriodElement.textContent = currentFormat;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

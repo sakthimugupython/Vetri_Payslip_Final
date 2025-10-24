@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - VETRI IT SYSTEMS</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/logo.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+            <div class="container-fluid">
+                <!-- Logo and Company Name -->
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
+                    <img src="{% static 'images/VIS LOGO.png' %}" alt="Logo" class="logo-img">
+                    <div class="ms-3">
+                        <h1 class="company-name mb-0">VETRI IT SYSTEMS</h1>
+                        <p class="company-subtitle mb-0">-Employee Payslip-</p>
+                    </div>
+                </a>
+                
+                <!-- Hamburger Toggle Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Collapsible Menu -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <div class="navbar-nav">
+                        <a href="{% url 'dashboard' %}" class="nav-link btn-generate me-2">Generate Payslip</a>
+                        <a href="{% url 'view_payslips' %}" class="nav-link btn-view-payslip me-2">View Payslip</a>
+                        <a href="{% url 'logout' %}" class="nav-link btn-logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content mt-2">
+        <div class="container">
+            <h2 class="page-title">EMPLOYEE PAYSLIP GENERATOR</h2>
+            
+            <div class="payslip-card">
+                <!-- Company Header -->
+                <div class="row mb-4">
+                    <!-- Logo Row -->
+                    <div class="col-12 text-start mb-3">
+                        <img src="{% static 'images/VIS LOGO.png' %}" alt="Logo" class="company-logo">
+                    </div>
+
+                    <!-- Company Name Row -->
+                    <div class="col-12 text-start mb-3">
+                        <h3 class="company-title mb-0">VETRI IT SYSTEMS PVT LTD.,</h3>
+                    </div>
+
+                    <!-- Company Address and Payslip Month Row -->
+                    <div class="row mb-3">
+                        <!-- Company Address Column -->
+                        <div class="col-md-8 text-start">
+                            <p class="company-address mb-1 text-dark fw-semibold">Shanthi complex, Second floor,</p>
+                            <p class="company-address mb-1 text-dark fw-semibold">Surandai, Tenkasi - 627 859</p>
+                            <p class="company-address mb-0 text-dark fw-semibold">India</p>
+                        </div>
+
+                        <!-- Payslip Month Info Column -->
+                        <div class="col-md-4 text-end">
+                            <p class="payslip-month-label text-dark fw-semibold">Payslip for the Month</p>
+                            <div class="modern-month-selector">
+                                <select class="modern-select" id="payslipMonth" required>
+                                    <option value="">Select Month</option>
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10" selected>October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                                <input type="number" class="modern-input" id="payslipYear" value="2025" min="2020" max="2030" placeholder="Year" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employee Pay Summary -->
+                <div class="section-header">
+                    <h5>Employee Pay Summary<span class="required">*</span></h5>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Employee Name :</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control editable-field" placeholder="Enter employee name" required minlength="2" maxlength="100" pattern="[A-Za-z\s]+" title="Employee name can only contain letters and spaces">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Paid Days :</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control editable-field" min="0" max="31" placeholder="Enter paid days" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Employee ID :</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control editable-field" placeholder="Enter employee ID" required pattern="[A-Za-z0-9]+" title="Employee ID must contain only letters and numbers">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Loss of Pay Days :</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control editable-field" min="0" max="31" placeholder="Enter LOP days" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Pay Period :</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control editable-field" placeholder="Auto-filled from month selection" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Payment Date :</label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control editable-field" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income Details -->
+                <div class="section-header">
+                    <h5>Income Details<span class="required">*</span></h5>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="income-table" style="border-radius: 20px;border: 1px solid #666666be;">
+                            <div class="table-header" style="border-bottom: 1px solid #666666be;">
+                                <div class="row">
+                                    <div class="col-6"><strong>Earnings</strong></div>
+                                    <div class="col-6 text-end"><strong>Amount</strong></div>
+                                </div>
+                            </div>
+                            <div class="table-body">
+                                <div class="row py-2">
+                                    <div class="col-6">Basic</div>
+                                    <div class="col-6 text-end">
+                                        <input type="number" class="form-control form-control-sm text-end editable-income" min="0" step="0.01" placeholder="₹ 0" required>
+                                    </div>
+                                </div>
+                                <div class="row py-2">
+                                    <div class="col-6">Incentive</div>
+                                    <div class="col-6 text-end">
+                                        <input type="number" class="form-control form-control-sm text-end editable-income" min="0" step="0.01" placeholder="₹ 0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-footer">
+                                <div class="row">
+                                    <div class="col-6"><strong>Gross Earnings</strong></div>
+                                    <div class="col-6 text-end">
+                                        <input type="number" class="form-control form-control-sm text-end fw-bold" id="grossEarnings" min="0" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="income-table" style="border-radius: 20px;border: 1px solid #666666be;">
+                            <div class="table-header" style="border-bottom: 1px solid #666666be;">
+                                <div class="row">
+                                    <div class="col-6"><strong>Deduction</strong></div>
+                                    <div class="col-6 text-end"><strong>Amount</strong></div>
+                                </div>
+                            </div>
+                            <div class="table-body">
+                                <div class="row py-2">
+                                    <div class="col-6">Income Tax</div>
+                                    <div class="col-6 text-end py-1">
+                                        <input type="number" class="form-control form-control-sm text-end editable-deduction" min="0" step="0.01" placeholder="₹ 0" required>
+                                    </div>
+                                </div>
+                                <div class="row py-2">
+                                    <div class="col-6">&nbsp;</div>
+                                    <div class="col-6 text-end">&nbsp;</div>
+                                </div>
+                            </div>
+                            <div class="table-footer" style="border-top: 1px solid #666666be; background-color: #3C3084;">
+                                <div class="row" >
+                                    <div class="col-6"><strong>Total Deduction</strong></div>
+                                    <div class="col-6 text-end">
+                                        <input type="number" class="form-control form-control-sm text-end fw-bold" id="totalDeduction" min="0" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Net Payable -->
+                <div class="net-payable-box" style="background-color: #f6ffed;">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="mb-1">TOTAL NET PAYABLE</h5>
+                            <p class="mb-0 text-dark">Gross Earnings - Total Deduction</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="net-amount">₹ <span id="netPayableAmount">0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amount in Words -->
+                <div class="amount-words-container">
+                    <div class="amount-words-content">
+                        <strong>Amount in words:</strong> <span id="amountInWords">Indian Rupee Fifteen Thousand Five Hundred Only</span>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="text-center mt-4">
+                    <button class="btn-generate-payslip">Generate Payslip</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Modern month/year selector functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const monthSelect = document.getElementById('payslipMonth');
+            const yearInput = document.getElementById('payslipYear');
+            const grossEarnings = document.getElementById('grossEarnings');
+            const totalDeduction = document.getElementById('totalDeduction');
+            const netPayableAmount = document.getElementById('netPayableAmount');
+
+            // Initialize calculations and amount in words
+            calculateTotals();
+            updateMonthDisplay();
+
+            // Auto-calculate totals
+            function calculateTotals() {
+                const basic = parseFloat(document.querySelector('.editable-income').value) || 0;
+                const incentive = parseFloat(document.querySelectorAll('.editable-income')[1].value) || 0;
+                const incomeTax = parseFloat(document.querySelector('.editable-deduction').value) || 0;
+
+                const grossTotal = basic + incentive;
+                const deductionTotal = incomeTax;
+                const netTotal = grossTotal - deductionTotal;
+
+                grossEarnings.value = grossTotal || '';
+                totalDeduction.value = deductionTotal || '';
+                netPayableAmount.textContent = netTotal || '0';
+
+                // Update amount in words
+                updateAmountInWords();
+            }
+
+            function updateMonthDisplay() {
+                const selectedMonth = monthSelect.options[monthSelect.selectedIndex].text;
+                const selectedYear = yearInput.value;
+
+                // Update the pay period field based on selected month/year
+                const payPeriodField = document.querySelector('.editable-field[placeholder*="Auto-filled from month selection"]');
+                if (payPeriodField) {
+                    const monthNames = [
+                        'January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'
+                    ];
+
+                    const monthIndex = parseInt(monthSelect.value) - 1;
+                    const monthName = monthNames[monthIndex];
+
+                    // Calculate pay period (1-Oct-2025 to 30-Oct-2025 format)
+                    const year = parseInt(selectedYear);
+                    const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+                    
+                    // Use short month names
+                    const shortMonthNames = [
+                        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                    ];
+                    
+                    const shortMonthName = shortMonthNames[monthIndex];
+                    payPeriodField.value = `1-${shortMonthName}-${year} to ${lastDay}-${shortMonthName}-${year}`;
+                }
+
+                // Recalculate totals after month change
+                calculateTotals();
+            }
+
+            // Add event listeners
+            monthSelect.addEventListener('change', updateMonthDisplay);
+            yearInput.addEventListener('input', updateMonthDisplay);
+
+            // Add listeners for income/deduction changes
+            const incomeFields = document.querySelectorAll('.editable-income, .editable-deduction');
+            incomeFields.forEach(field => {
+                field.addEventListener('input', calculateTotals);
+            });
+
+            // Number to words conversion function
+            function numberToWords(num) {
+                if (num === 0) return "Zero";
+
+                const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+                const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+                const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+                const thousands = ["", "Thousand", "Lakh", "Crore"];
+
+                function convertHundreds(n) {
+                    let result = "";
+                    if (n >= 100) {
+                        result += ones[Math.floor(n / 100)] + " Hundred ";
+                        n %= 100;
+                    }
+                    if (n >= 20) {
+                        result += tens[Math.floor(n / 10)] + " ";
+                        n %= 10;
+                    }
+                    if (n >= 10) {
+                        result += teens[n - 10] + " ";
+                        n = 0;
+                    }
+                    if (n > 0) {
+                        result += ones[n] + " ";
+                    }
+                    return result.trim();
+                }
+
+                function convertToWords(n) {
+                    if (n === 0) return "Zero";
+
+                    let result = "";
+                    let place = 0;
+
+                    while (n > 0) {
+                        const hundreds = n % 1000;
+                        if (hundreds > 0) {
+                            const hundredWords = convertHundreds(hundreds);
+                            if (place > 0) {
+                                result = hundredWords + " " + thousands[place] + " " + result;
+                            } else {
+                                result = hundredWords + result;
+                            }
+                        }
+                        n = Math.floor(n / 1000);
+                        place++;
+                    }
+
+                    return result.trim();
+                }
+
+                // Handle paise (cents)
+                const rupees = Math.floor(num);
+                const paise = Math.round((num - rupees) * 100);
+
+                let words = "";
+                if (rupees > 0) {
+                    words = convertToWords(rupees) + " Rupee";
+                    if (rupees > 1) words += "s";
+                }
+
+                if (paise > 0) {
+                    if (words) words += " and ";
+                    words += convertToWords(paise) + " Paisa";
+                    if (paise > 1) words += "s";
+                }
+
+                return words || "Zero";
+            }
+
+            // Update amount in words
+            function updateAmountInWords() {
+                const netAmount = parseFloat(netPayableAmount.textContent.replace(/,/g, '')) || 0;
+                const amountInWordsElement = document.getElementById('amountInWords');
+
+                if (netAmount > 0) {
+                    const words = numberToWords(netAmount);
+                    amountInWordsElement.textContent = `Indian Rupee ${words} Only`;
+                } else {
+                    amountInWordsElement.textContent = "Indian Rupee Zero Only";
+                }
+            }
+
+            // Add form validation
+            function validateForm() {
+                const requiredFields = document.querySelectorAll('input[required], select[required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        field.classList.remove('is-invalid');
+                        field.classList.add('is-valid');
+                    }
+                });
+
+                return isValid;
+            }
+
+            // Add form submission handler
+            const generateButton = document.querySelector('.btn-generate-payslip');
+            if (generateButton) {
+                generateButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    generatePayslip();
+                });
+            }
+
+            // Global function for payslip generation
+            window.generatePayslip = function() {
+                if (validateForm()) {
+                    // Collect form data
+                    const editableFields = document.querySelectorAll('.editable-field');
+                    const formData = new FormData();
+                    formData.append('employee_name', editableFields[0].value);
+                    formData.append('paid_days', editableFields[1].value);
+                    formData.append('employee_id', editableFields[2].value);
+                    formData.append('loss_of_pay_days', editableFields[3].value);
+                    formData.append('pay_period', editableFields[4].value);
+                    formData.append('payment_date', editableFields[5].value);
+                    formData.append('basic_salary', document.querySelectorAll('.editable-income')[0].value);
+                    formData.append('incentive', document.querySelectorAll('.editable-income')[1].value);
+                    formData.append('gross_earnings', document.getElementById('grossEarnings').value);
+                    formData.append('income_tax', document.querySelector('.editable-deduction').value);
+                    formData.append('total_deduction', document.getElementById('totalDeduction').value);
+                    formData.append('net_payable', document.getElementById('netPayableAmount').textContent);
+                    formData.append('amount_in_words', document.getElementById('amountInWords').textContent);
+                    
+                    // Get CSRF token
+                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                                     getCookie('csrftoken');
+                    
+                    // Show loading state
+                    generateButton.disabled = true;
+                    generateButton.textContent = 'Generating...';
+                    
+                    // Submit via AJAX
+                    fetch('{% url "generate_payslip" %}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Redirect to preview page
+                            window.location.href = data.redirect_url;
+                        } else {
+                            // Show error message for duplicate payslip or other errors
+                            alert('Error: ' + data.message);
+                            // Re-enable the generate button
+                            generateButton.disabled = false;
+                            generateButton.textContent = 'Generate Payslip';
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error generating payslip. Please try again.');
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        generateButton.disabled = false;
+                        generateButton.textContent = 'Generate Payslip';
+                    });
+                } else {
+                    alert('Please fill in all required fields correctly.');
+                }
+            }
+            
+            // Helper function to get CSRF token from cookies
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        });
+    </script>
+</body>
+</html>

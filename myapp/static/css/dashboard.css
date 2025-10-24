@@ -1,0 +1,588 @@
+/* VETRI IT SYSTEMS Dashboard - Payslip Generator */
+
+/* Custom VETRI brand colors */
+:root {
+    --vetri-purple: #3C3084;
+    --vetri-green: #4CAF50;
+    --vetri-light-green: #F6FFED;
+    --vetri-light-bg: #F5F9F5;
+}
+
+/* Body and General Styles */
+body {
+    background-color: var(--vetri-light-green);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    padding-top: 120px; /* Increased for fixed navbar */
+}
+
+/* Header Styles */
+.header {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.navbar {
+    padding: 15px 40px;
+    background-color: white !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    text-decoration: none;
+}
+
+.logo-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.company-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--vetri-purple);
+    line-height: 1.2;
+}
+
+.company-subtitle {
+    font-size: 14px;
+    color: var(--vetri-purple);
+    font-weight: 400;
+}
+
+/* Navbar Toggle Button (Hamburger) */
+.navbar-toggler {
+    border: 2px solid var(--vetri-purple);
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(60, 48, 132, 0.25);
+    outline: none;
+}
+
+.navbar-toggler:hover {
+    background-color: rgba(60, 48, 132, 0.05);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%233C3084' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    width: 24px;
+    height: 24px;
+}
+
+/* Smooth collapse animation */
+.navbar-collapse {
+    transition: height 0.3s ease;
+}
+
+/* Navigation Links */
+.navbar-nav {
+    align-items: center;
+}
+
+.btn-generate {
+    background-color: transparent;
+    color: var(--vetri-purple) !important;
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-generate:hover {
+    background-color: rgba(60, 48, 132, 0.1);
+}
+
+.btn-logout {
+    background-color: var(--vetri-purple);
+    color: white !important;
+    text-decoration: none;
+    padding: 8px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-view-payslip {
+    background-color: transparent;
+    color: var(--vetri-purple) !important;
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-view-payslip:hover {
+    background-color: rgba(60, 48, 132, 0.1);
+}
+
+/* Main Content */
+.main-content {
+    padding: 40px 20px;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+}
+
+/* Payslip Card */
+.payslip-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Company Logo and Info */
+.company-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    display: block;
+}
+
+.company-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.company-address {
+    font-size: 14px;
+    color: #000000;
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+.payslip-month-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* Modern Month Selector */
+.modern-month-selector {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.modern-select {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #495057;
+    font-weight: 500;
+    min-width: 120px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-select:focus {
+    border-color: var(--vetri-purple);
+    box-shadow: 0 0 0 0.2rem rgba(60, 48, 132, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    transform: translateY(-1px);
+}
+
+.modern-select:hover {
+    border-color: #ced4da;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modern-input {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #495057;
+    font-weight: 500;
+    width: 80px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-input:focus {
+    border-color: var(--vetri-purple);
+    box-shadow: 0 0 0 0.2rem rgba(60, 48, 132, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    transform: translateY(-1px);
+}
+
+.modern-input:hover {
+    border-color: #ced4da;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern form styling for webkit browsers */
+.modern-select::-webkit-outer-spin-button,
+.modern-select::-webkit-inner-spin-button,
+.modern-input::-webkit-outer-spin-button,
+.modern-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.modern-input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Section Headers */
+.section-header {
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.section-header h5 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--vetri-purple);
+    margin: 0;
+}
+
+.required {
+    color: #d32f2f;
+    margin-left: 2px;
+}
+
+/* Form Controls */
+.col-form-label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    padding-top: 8px;
+}
+
+/* Editable Form Fields */
+.editable-field {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.editable-field:focus {
+    border-color: var(--vetri-purple);
+    box-shadow: 0 0 0 0.2rem rgba(60, 48, 132, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    transform: translateY(-1px);
+}
+
+.editable-field:hover {
+    border-color: #ced4da;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Validation States */
+.editable-field:valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+}
+
+.editable-field:invalid:not(:placeholder-shown) {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+.editable-field:invalid:not(:placeholder-shown):focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.editable-income:valid,
+.editable-deduction:valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+}
+
+.editable-income:invalid:not(:placeholder-shown),
+.editable-deduction:invalid:not(:placeholder-shown) {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+.modern-select:valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+}
+
+.modern-select:invalid:not([value=""]) {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+.modern-input:invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+.modern-input:valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+}
+
+/* Validation feedback styles */
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+.valid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #28a745;
+}
+
+.editable-income,
+.editable-deduction {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: #495057;
+    font-weight: 600;
+    text-align: right;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.editable-income:focus,
+.editable-deduction:focus {
+    border-color: var(--vetri-purple);
+    box-shadow: 0 0 0 0.2rem rgba(60, 48, 132, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    transform: translateY(-1px);
+}
+
+.editable-income:hover,
+.editable-deduction:hover {
+    border-color: #ced4da;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Income Tables */
+.income-table {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.table-header {
+    background: linear-gradient(135deg, #F6FFED 0%, #f0f8e8 100%);
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 8px 8px 0 0;
+}
+
+.table-body {
+    padding: 0 15px;
+}
+
+.table-body .row {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table-body .row:last-child {
+    border-bottom: none;
+}
+
+.table-footer {
+    background-color: var(--vetri-purple);
+    color: white;
+    padding: 12px 15px;
+    font-weight: 600;
+}
+
+/* Net Payable Box */
+.net-payable-box {
+    background-color: #f6ffed;
+    border: 2px solid #E8E5D0;
+    border-radius: 8px;
+    padding: 20px 30px;
+    margin-top: 30px;
+}
+
+.net-payable-box h5 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.net-amount {
+    background-color: var(--vetri-purple);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 22px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+/* Amount in Words */
+.amount-words-container {
+    margin-top: 20px;
+    padding: 15px 0;
+}
+
+.amount-words-content {
+    text-align: right;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.amount-words-content strong {
+    color: var(--vetri-purple);
+    font-weight: 700;
+}
+
+#amountInWords {
+    color: black;
+    font-weight: 600;
+}
+
+/* Generate Payslip Button */
+.btn-generate-payslip {
+    background-color: var(--vetri-purple);
+    color: white;
+    border: none;
+    padding: 12px 50px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-generate-payslip:hover {
+    background-color: #2a2463;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .navbar {
+        padding: 15px 20px;
+        background-color: white !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-nav {
+        align-items: flex-start;
+        margin-top: 15px;
+    }
+    
+    .btn-generate,
+    .btn-view-payslip,
+    .btn-logout {
+        margin: 5px 0;
+        display: block;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .company-name {
+        font-size: 12px;
+    }
+    
+    .company-subtitle {
+        font-size: 12px;
+    }
+    
+    .logo-img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .payslip-card {
+        padding: 20px;
+    }
+    
+    .company-logo {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .page-title {
+        font-size: 22px;
+    }
+    
+    .net-payable-box {
+        padding: 15px 20px;
+    }
+    
+    .modern-month-selector {
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-end;
+    }
+    
+    .modern-select {
+        min-width: 100px;
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+    
+    .modern-input {
+        width: 70px;
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+    
+    .editable-income,
+    .editable-deduction {
+        font-size: 13px;
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+}

@@ -1,0 +1,207 @@
+/* VETRI IT SYSTEMS Login Page - Bootstrap Enhanced */
+
+/* Custom VETRI brand colors */
+:root {
+    --vetri-purple: #3C3084;
+    --vetri-green: #4CAF50;
+    --vetri-light-green: #F6FFED;
+}
+
+/* VETRI Typography and Brand Colors */
+.brand-title {
+    color: #3C3084 !important;
+    font-size: 1.4rem !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.brand-subtitle {
+    color: #3C3084 !important;
+    font-size: 1.5rem !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+}
+
+.form-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.welcome-text h2 {
+    color: #3C3084 !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.welcome-text p {
+    color: #3C3084 !important;
+    font-size: 1.75rem !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+}
+
+.login-button {
+    background-color: #3C3084 !important;
+    color: white !important;
+    border: none !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    padding: 1rem 2rem !important;
+    border-radius: 2rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.logo-image {
+        width: 105px;
+        height: 105px;
+    }
+
+
+.form-input {
+    border: none !important;
+    outline: none !important;
+    flex: 1;
+    font-family: 'SF Pro', system-ui, -apple-system, sans-serif;
+    font-weight: 510;
+    font-size: 18px;
+    line-height: 21px;
+    color: #131313;
+    background: transparent;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* 1024px to 1439px breakpoint for text alignment and sizing */
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .logo-container {
+        width: 105px;
+        height: 105px;
+    }
+
+    .logo-image {
+        width: 105px;
+        height: 105px;
+    }
+
+    .brand-info {
+        text-align: center !important;
+    }
+
+    .welcome-text {
+        text-align: center !important;
+    }
+
+    .brand-title {
+        font-size: 1.2rem !important;
+    }
+
+    .brand-subtitle {
+        font-size: 1rem !important;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .welcome-text p {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* Tablet-specific styling (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .logo-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    .logo-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .brand-title {
+        font-size: 2rem !important;
+    }
+
+    .brand-subtitle {
+        font-size: 1.25rem !important;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.75rem !important;
+    }
+
+    .welcome-text p {
+        font-size: 1rem !important;
+    }
+
+    .login-button {
+        font-size: 1.125rem !important;
+        padding: 0.875rem 1.75rem !important;
+    }
+}
+
+/* Responsive adjustments for Bootstrap grid */
+@media (max-width: 767px) {
+    .login-container {
+        flex-direction: column !important;
+    }
+
+    .logo-container {
+        width: 70px;
+        height: 70px;
+        flex-shrink: 0;
+    }
+
+    .logo-image {
+        width: 70px;
+        height: 70px;
+    }
+
+    .brand-title {
+        font-size: 1.25rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+
+    .brand-subtitle {
+        font-size: 0.875rem !important;
+        white-space: nowrap;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.2rem !important;
+    }
+
+    .welcome-text p {
+        font-size: 1rem !important;
+    }
+
+    .login-button {
+        font-size: 1.125rem !important;
+        padding: 0.875rem 1.5rem !important;
+    }
+
+    .brand-info {
+        text-align: left !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Hide illustration on very small screens */
+    .illustration-image {
+        display: none !important;
+    }
+}

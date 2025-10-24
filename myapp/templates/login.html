@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VETRI IT SYSTEMS - Employee Payslip Login</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body class="bg-white d-flex align-items-center justify-content-center min-vh-100 p-3">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <div class="login-container d-flex bg-white rounded-4 shadow-lg overflow-hidden">
+                    <!-- Left Section with VETRI IT SYSTEMS branding -->
+                    <div class="left-section col-md-6 d-flex flex-column align-items-center justify-content-center p-4 p-lg-5 text-center">
+                        <div class="logo-section d-flex flex-column flex-lg-row align-items-center gap-4 mb-4">
+                            <div class="logo-container">
+                                <img src="{% static 'images/VIS LOGO.png' %}" alt="VETRI IT SYSTEMS Logo" class="logo-image">
+                            </div>
+                            <div class="brand-info text-center text-lg-start">
+                                <h1 class="brand-title fw-bold mb-2">VETRI IT SYSTEMS</h1>
+                                <p class="brand-subtitle">-Employee Payslip-</p>
+                            </div>
+                        </div>
+
+                        <div class="illustration">
+                            <img src="{% static 'images/login illustration.png' %}" alt="Login Illustration" class="illustration-image w-100 mw-100">
+                        </div>
+                    </div>
+
+                    <!-- Right Section with Login Form -->
+                    <div class="right-section col-md-6 bg-opacity-10 p-4 p-lg-5 d-flex flex-column justify-content-center align-items-center" style="background-color: #f6ffed;">
+                        <div class="login-box w-100">
+                            <div class="welcome-text text-center mb-4">
+                                <h2 class="fw-bold text-primary">Hello, Welcome Back!</h2>
+                                <p class="text-primary">Login to continue</p>
+                            </div>
+
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} text-center">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-section mb-4">
+                                    <div class="input-section d-flex flex-column gap-3">
+                                        <div class="input-wrapper d-flex align-items-center bg-white border rounded-pill px-4 py-3 gap-3">
+                                            <svg class="input-icon text-dark" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+                                            </svg>
+                                            <input type="text" name="username" class="form-input form-control border-0 p-0 flex-fill" placeholder="Username/Email" required>
+                                        </div>
+
+                                        <div class="input-wrapper d-flex align-items-center bg-white border rounded-pill px-4 py-3 gap-3">
+                                            <svg class="input-icon text-dark" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6zM16 10v10H8V10h8z" fill="currentColor"/>
+                                            </svg>
+                                            <input type="password" name="password" id="password" class="form-input form-control border-0 p-0 flex-fill" placeholder="Password" required>
+                                            <button type="button" class="btn btn-link p-0 border-0 password-toggle" onclick="togglePasswordVisibility()">
+                                                <svg class="password-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="login-button btn btn-primary w-100 rounded-pill py-3 fw-semibold fs-5">Login</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.querySelector('.password-toggle');
+            const toggleIcon = document.querySelector('.password-toggle-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                // Change icon to eye-slash (hidden)
+                toggleIcon.innerHTML = '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l3.26 3.26c.51-.8.8-1.69.8-2.59C20.5 9.91 16.09 5.5 12 5.5c-1.09 0-2.16.24-3.11.65l2.43 2.43C11.74 8.26 12 8.5 12 7zm-6.38-.96l2.12 2.12C6.22 9.07 5.5 10.1 5.5 12c0 4.41 4.41 8.5 8.5 8.5 1.39 0 2.73-.33 3.92-.85l2.12 2.12 1.41-1.41L3.51 2.22l-1.41 1.41L6.38 8.04zm2.21 2.21l1.12 1.12c-.22.53-.34 1.1-.34 1.63 0 2.21 1.79 4 4 4 .53 0 1.1-.12 1.63-.34l1.12 1.12c-.64.28-1.32.43-2.02.43-2.76 0-5-2.24-5-5 0-.7.15-1.38.43-2.02z" fill="currentColor"/>';
+            } else {
+                passwordInput.type = 'password';
+                // Change icon to eye (visible)
+                toggleIcon.innerHTML = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>';
+            }
+        }
+    </script>
+</body>
+</html>
