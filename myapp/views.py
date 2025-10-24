@@ -17,19 +17,27 @@ import os
 from datetime import datetime
 from decimal import Decimal
 
+
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 
-# Register Calibri font for better Unicode support
+# Register DejaVu Sans font for Unicode support including rupee symbol
 try:
-    pdfmetrics.registerFont(TTFont('Calibri', os.path.join('C:/Windows/Fonts', 'calibri.ttf')))
-    pdfmetrics.registerFont(TTFont('Calibri-Bold', os.path.join('C:/Windows/Fonts', 'calibrib.ttf')))
-    FONT_NAME = 'Calibri-Bold'
+    font_path = os.path.join(settings.BASE_DIR, 'myapp', 'static', 'fonts', 'DejaVuSans.ttf')
+    bold_font_path = os.path.join(settings.BASE_DIR, 'myapp', 'static', 'fonts', 'DejaVuSans-Bold.ttf')
+    if os.path.exists(font_path):
+        pdfmetrics.registerFont(TTFont('DejaVuSans', font_path))
+        if os.path.exists(bold_font_path):
+            pdfmetrics.registerFont(TTFont('DejaVuSans-Bold', bold_font_path))
+            FONT_NAME = 'DejaVuSans-Bold'
+        else:
+            FONT_NAME = 'DejaVuSans'
+    else:
+        # Fallback to Helvetica if DejaVu not available
+        FONT_NAME = 'Helvetica-Bold'
 except:
-    # Fallback to Arial if Calibri not available
-    pdfmetrics.registerFont(TTFont('ArialUnicode', os.path.join('C:/Windows/Fonts', 'arial.ttf')))
-    pdfmetrics.registerFont(TTFont('ArialUnicode-Bold', os.path.join('C:/Windows/Fonts', 'arialbd.ttf')))
-    FONT_NAME = 'ArialUnicode-Bold'
+    # Ultimate fallback
+    FONT_NAME = 'Helvetica-Bold'
 
 def generate_payslip_pdf(filepath, context):
     """Generate PDF payslip using ReportLab - matching HTML preview design"""
