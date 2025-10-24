@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput && gunicorn Payslip.wsgi
+web: gunicorn Payslip.wsgi
