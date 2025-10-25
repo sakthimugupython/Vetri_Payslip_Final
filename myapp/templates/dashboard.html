@@ -453,12 +453,24 @@
                     formData.append('loss_of_pay_days', editableFields[3].value);
                     formData.append('pay_period', editableFields[4].value);
                     formData.append('payment_date', editableFields[5].value);
-                    formData.append('basic_salary', document.querySelectorAll('.editable-income')[0].value);
-                    formData.append('incentive', document.querySelectorAll('.editable-income')[1].value);
-                    formData.append('gross_earnings', document.getElementById('grossEarnings').value);
-                    formData.append('income_tax', document.querySelector('.editable-deduction').value);
-                    formData.append('total_deduction', document.getElementById('totalDeduction').value);
-                    formData.append('net_payable', document.getElementById('netPayableAmount').textContent);
+
+                    // Get income/deduction values and ensure they're valid numbers
+                    const incomeFields = document.querySelectorAll('.editable-income');
+                    const basicSalary = parseFloat(incomeFields[0].value) || 0;
+                    const incentive = parseFloat(incomeFields[1].value) || 0;
+                    const grossEarnings = basicSalary + incentive;
+
+                    const deductionFields = document.querySelectorAll('.editable-deduction');
+                    const incomeTax = parseFloat(deductionFields[0].value) || 0;
+                    const totalDeduction = incomeTax;
+                    const netPayable = grossEarnings - totalDeduction;
+
+                    formData.append('basic_salary', basicSalary.toString());
+                    formData.append('incentive', incentive.toString());
+                    formData.append('gross_earnings', grossEarnings.toString());
+                    formData.append('income_tax', incomeTax.toString());
+                    formData.append('total_deduction', totalDeduction.toString());
+                    formData.append('net_payable', netPayable.toString());
                     formData.append('amount_in_words', document.getElementById('amountInWords').textContent);
                     
                     // Get CSRF token

@@ -15,7 +15,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 import os
 from datetime import datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 
 from reportlab.pdfbase.ttfonts import TTFont
@@ -435,20 +435,31 @@ def generate_payslip(request):
                     'message': f'Payslip already exists for Employee ID {employee_id} for period {pay_period}. Please check the View Payslips page to access the existing payslip.'
                 })
 
-            # Extract data from POST request
+            # Helper function to safely convert to Decimal
+            def safe_decimal(value, field_name, default=0):
+                if not value or value.strip() == '':
+                    return Decimal(str(default))
+                try:
+                    # Remove any currency symbols or extra whitespace
+                    cleaned_value = str(value).strip().replace('₹', '').replace(',', '').replace(' ', '')
+                    return Decimal(cleaned_value)
+                except (ValueError, InvalidOperation) as e:
+                    raise ValueError(f'Invalid {field_name} value: {value}')
+
+            # Extract and validate data from POST request
             payslip_data = {
                 'employee_name': request.POST.get('employee_name'),
                 'employee_id': employee_id,
                 'pay_period': pay_period,
-                'paid_days': int(request.POST.get('paid_days')),
-                'loss_of_pay_days': int(request.POST.get('loss_of_pay_days')),
+                'paid_days': int(request.POST.get('paid_days') or 0),
+                'loss_of_pay_days': int(request.POST.get('loss_of_pay_days') or 0),
                 'payment_date': request.POST.get('payment_date'),
-                'basic_salary': Decimal(request.POST.get('basic_salary')),
-                'incentive': Decimal(request.POST.get('incentive')),
-                'gross_earnings': Decimal(request.POST.get('gross_earnings')),
-                'income_tax': Decimal(request.POST.get('income_tax')),
-                'total_deduction': Decimal(request.POST.get('total_deduction')),
-                'net_payable': Decimal(request.POST.get('net_payable')),
+                'basic_salary': safe_decimal(request.POST.get('basic_salary'), 'basic salary'),
+                'incentive': safe_decimal(request.POST.get('incentive'), 'incentive'),
+                'gross_earnings': safe_decimal(request.POST.get('gross_earnings'), 'gross earnings'),
+                'income_tax': safe_decimal(request.POST.get('income_tax'), 'income tax'),
+                'total_deduction': safe_decimal(request.POST.get('total_deduction'), 'total deduction'),
+                'net_payable': safe_decimal(request.POST.get('net_payable'), 'net payable'),
                 'amount_in_words': request.POST.get('amount_in_words'),
             }
 
@@ -528,19 +539,30 @@ def generate_pdf_download(request):
             import json
             data = json.loads(request.body)
 
+            # Helper function to safely convert to Decimal
+            def safe_decimal(value, field_name, default=0):
+                if not value or value.strip() == '':
+                    return Decimal(str(default))
+                try:
+                    # Remove any currency symbols or extra whitespace
+                    cleaned_value = str(value).strip().replace('₹', '').replace(',', '').replace(' ', '')
+                    return Decimal(cleaned_value)
+                except (ValueError, InvalidOperation) as e:
+                    raise ValueError(f'Invalid {field_name} value: {value}')
+
             # Extract data
             employee_name = data.get('employee_name')
             employee_id = data.get('employee_id')
             pay_period = data.get('pay_period')
-            paid_days = int(data.get('paid_days'))
-            loss_of_pay_days = int(data.get('loss_of_pay_days'))
+            paid_days = int(data.get('paid_days') or 0)
+            loss_of_pay_days = int(data.get('loss_of_pay_days') or 0)
             payment_date = data.get('payment_date')
-            basic_salary = Decimal(data.get('basic_salary'))
-            incentive = Decimal(data.get('incentive'))
-            gross_earnings = Decimal(data.get('gross_earnings'))
-            income_tax = Decimal(data.get('income_tax'))
-            total_deduction = Decimal(data.get('total_deduction'))
-            net_payable = Decimal(data.get('net_payable'))
+            basic_salary = safe_decimal(data.get('basic_salary'), 'basic salary')
+            incentive = safe_decimal(data.get('incentive'), 'incentive')
+            gross_earnings = safe_decimal(data.get('gross_earnings'), 'gross earnings')
+            income_tax = safe_decimal(data.get('income_tax'), 'income tax')
+            total_deduction = safe_decimal(data.get('total_deduction'), 'total deduction')
+            net_payable = safe_decimal(data.get('net_payable'), 'net payable')
             amount_in_words = data.get('amount_in_words')
 
             # Prepare context
@@ -601,19 +623,30 @@ def save_payslip_to_database(request):
             import json
             data = json.loads(request.body)
 
+            # Helper function to safely convert to Decimal
+            def safe_decimal(value, field_name, default=0):
+                if not value or value.strip() == '':
+                    return Decimal(str(default))
+                try:
+                    # Remove any currency symbols or extra whitespace
+                    cleaned_value = str(value).strip().replace('₹', '').replace(',', '').replace(' ', '')
+                    return Decimal(cleaned_value)
+                except (ValueError, InvalidOperation) as e:
+                    raise ValueError(f'Invalid {field_name} value: {value}')
+
             # Extract data
             employee_name = data.get('employee_name')
             employee_id = data.get('employee_id')
             pay_period = data.get('pay_period')
-            paid_days = int(data.get('paid_days'))
-            loss_of_pay_days = int(data.get('loss_of_pay_days'))
+            paid_days = int(data.get('paid_days') or 0)
+            loss_of_pay_days = int(data.get('loss_of_pay_days') or 0)
             payment_date = data.get('payment_date')
-            basic_salary = Decimal(data.get('basic_salary'))
-            incentive = Decimal(data.get('incentive'))
-            gross_earnings = Decimal(data.get('gross_earnings'))
-            income_tax = Decimal(data.get('income_tax'))
-            total_deduction = Decimal(data.get('total_deduction'))
-            net_payable = Decimal(data.get('net_payable'))
+            basic_salary = safe_decimal(data.get('basic_salary'), 'basic salary')
+            incentive = safe_decimal(data.get('incentive'), 'incentive')
+            gross_earnings = safe_decimal(data.get('gross_earnings'), 'gross earnings')
+            income_tax = safe_decimal(data.get('income_tax'), 'income tax')
+            total_deduction = safe_decimal(data.get('total_deduction'), 'total deduction')
+            net_payable = safe_decimal(data.get('net_payable'), 'net payable')
             amount_in_words = data.get('amount_in_words')
 
             # Check if payslip already exists
